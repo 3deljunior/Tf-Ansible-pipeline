@@ -1,0 +1,10 @@
+---
+- name: Update apt cache and install baseline packages
+  ansible.builtin.apt:
+    name:
+      - curl
+      - git
+      - htop
+    state: present
+    update_cache: true
+    cache_valid_time: 3600

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_title | default('Dahab Blue Hole — Red Sea Adventure') }}</title>
+    <style>
+        :root {
+            --abyss: #020b18;
+            --deep-sea: #06213d;
+            --turquoise: #00d4ff;
+            --coral: #ff7b54;
+            --sand: #f4d9a6;
+            --glass: rgba(10, 31, 56, 0.62);
+            --border: rgba(0, 212, 255, 0.22);
+            --text-main: #eaf6ff;
+            --text-muted: #93b7d4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 20% 15%, #0c4b75 0%, var(--deep-sea) 40%, var(--abyss) 92%);
+            color: var(--text-main);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Subtle light rays from the surface */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 75% 0%, rgba(0, 212, 255, 0.16), transparent 55%),
+                radial-gradient(ellipse at 15% 10%, rgba(255, 123, 84, 0.10), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 36px 24px 48px;
+        }
+
+        /* Top Nav */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 56px;
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            color: var(--turquoise);
+        }
+
+        .coords {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.85rem;
+            color: var(--sand);
+            background: rgba(244, 217, 166, 0.1);
+            border: 1px solid rgba(244, 217, 166, 0.25);
+            padding: 6px 14px;
+            border-radius: 999px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 56px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.8rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--coral);
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 6vw, 4.1rem);
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(120deg, #ffffff 15%, var(--turquoise) 65%, var(--sand) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.12rem;
+            max-width: 620px;
+            margin: 0 auto 30px;
+        }
+
+        /* Quick Depth Metrics */
+        .metrics {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        .metric-pill {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            padding: 12px 22px;
+            border-radius: 14px;
+            min-width: 140px;
+        }
+
+        .metric-pill .num {
+            display: block;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .metric-pill .lbl {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        /* Adventure Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            margin-bottom: 56px;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+            border-radius: 18px;
+            padding: 28px;
+            transition: transform 0.25s ease, border-color 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.55);
+        }
+
+        .card-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--turquoise);
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .card p {
+            font-size: 0.96rem;
+            color: var(--text-muted);
+        }
+
+        /* Depth Journey Banner */
+        .banner {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.14), rgba(255, 123, 84, 0.12));
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 18px;
+            padding: 28px 32px;
+            margin-bottom: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .banner h3 {
+            font-size: 1.25rem;
+            margin-bottom: 6px;
+        }
+
+        .banner p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 640px;
+        }
+
+        .season-badge {
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 10px 18px;
+            border-radius: 12px;
+            background: rgba(2, 11, 24, 0.65);
+            border: 1px solid var(--sand);
+            color: var(--sand);
+            white-space: nowrap;
+        }
+
+        /* Infrastructure Metadata Footer (Ansible Facts) */
+        .meta-panel {
+            background: rgba(2, 10, 20, 0.85);
+            border: 1px solid rgba(0, 212, 255, 0.28);
+            border-top: 3px solid var(--turquoise);
+            border-radius: 14px;
+            padding: 20px 24px;
+        }
+
+        .meta-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .meta-title {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.82rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--turquoise);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+            display: inline-block;
+        }
+
+        .meta-sub {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+
+        .meta-key {
+            display: block;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .meta-val {
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            font-size: 0.92rem;
+            color: #ffffff;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <header class="nav">
+            <div class="brand">Dahab // Red Sea</div>
+            <div class="coords">28.5725° N, 34.5370° E</div>
+        </header>
+
+        <section class="hero">
+            <span class="eyebrow">South Sinai, Egypt</span>
+            <h1>Dive Into the Blue Hole</h1>
+            <p>
+                Where stark Sinai desert mountains drop straight into a 130-meter sapphire sinkhole.
+                Drift along vertical coral walls, freedive into endless visibility, and unwind by the shore with Bedouin tea.
+            </p>
+
+            <div class="metrics">
+                <div class="metric-pill">
+                    <span class="num">130m</span>
+                    <span class="lbl">Max Depth</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="num">56m</span>
+                    <span class="lbl">The Arch Tunnel</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="num">30m+</span>
+                    <span class="lbl">Visibility</span>
+                </div>
+                <div class="metric-pill">
+                    <span class="num">24–28°C</span>
+                    <span class="lbl">Water Temp</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <span class="card-tag">01 // Entry Point</span>
+                <h2>The Bells to Blue Hole</h2>
+                <p>
+                    Start 200 meters north at "The Bells"—a narrow chimney cleft in the reef—then drift effortlessly
+                    along a sheer coral wall teeming with anthias and glassfish right into the Saddle.
+                </p>
+            </article>
+
+            <article class="card">
+                <span class="card-tag">02 // Freediving Capital</span>
+                <h2>Zero Current, Pure Blue</h2>
+                <p>
+                    Sheltered by its circular reef rim, the Blue Hole offers glass-calm surface conditions year-round,
+                    making it one of the world's premier training grounds for freedivers and snorkelers alike.
+                </p>
+            </article>
+
+            <article class="card">
+                <span class="card-tag">03 // Shore Life</span>
+                <h2>Sinai Desert Meets Reef</h2>
+                <p>
+                    Step out of the water straight onto colorful Bedouin rugs under wooden pergolas.
+                    Swap dive logs over mint tea as the golden Sinai cliffs glow at sunset.
+                </p>
+            </article>
+        </section>
+
+        <section class="banner">
+            <div>
+                <h3>Ready for the Adventure?</h3>
+                <p>
+                    Just a 20-minute 4x4 ride north of Dahab town. Bring reef-safe sunscreen, fins, and respect for
+                    recreational depth limits—the top 30 meters hold the brightest coral gardens.
+                </p>
+            </div>
+            <div class="season-badge">Best Season: Mar – Nov</div>
+        </section>
+
+        <footer class="meta-panel">
+            <div class="meta-header">
+                <div class="meta-title">
+                    <span class="dot"></span>
+                    EC2 Node Telemetry
+                </div>
+                <div class="meta-sub">Deployed via Ansible Role: web_app</div>
+            </div>
+
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <span class="meta-key">Hostname</span>
+                    <span class="meta-val">{{ ansible_hostname }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-key">Private IP</span>
+                    <span class="meta-val">{{ ansible_default_ipv4.address }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-key">Operating System</span>
+                    <span class="meta-val">{{ ansible_distribution }} {{ ansible_distribution_version }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-key">Architecture</span>
+                    <span class="meta-val">{{ ansible_architecture }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-key">Deployed Date</span>
+                    <span class="meta-val">{{ ansible_date_time.date }}</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

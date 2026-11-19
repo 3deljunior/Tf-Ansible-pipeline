@@ -1,0 +1,20 @@
+plugin: amazon.aws.aws_ec2
+
+regions:
+  - us-east-1
+
+# select only running instances with the tag Role=WebServer created by Terraform
+filters:
+  instance-state-name: running
+  "tag:Role": WebServer
+
+# create groups based on the value of the Role tag
+
+keyed_groups:
+  - key: tags.Role
+    prefix: tag_Role
+    separator: "_"
+
+# communicate with the instances using their public IP addresses
+compose:
+  ansible_host: public_ip_address
