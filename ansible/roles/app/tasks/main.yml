@@ -10,10 +10,10 @@
   ansible.builtin.service:
     name: nginx
     state: started
-    enabled: true
+    enabled: true  # auto start on boot
 
 - name: Deploy dynamic web page
-  ansible.builtin.template:
+  template: # template not copy ,,,, as copy will not render the jinja2 template 
     src: index.html.j2
     dest: "{{ web_root }}/index.html"
     owner: www-data

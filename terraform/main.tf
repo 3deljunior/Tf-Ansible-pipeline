@@ -21,6 +21,7 @@ module "alb" {
   vpc_id            = module.network.vpc_id
   public_subnet_ids = module.network.public_subnet_ids
   instance_ids      = module.compute.instance_ids
+  instance_count    = var.instance_count
 }
 
 # Allow HTTP (port 80) to EC2s ONLY from the ALB Security Group
@@ -31,5 +32,6 @@ resource "aws_security_group_rule" "allow_http_from_alb" {
   protocol                 = "tcp"
   security_group_id        = module.compute.ec2_sg_id
   source_security_group_id = module.alb.alb_sg_id
+  # cidr_blocks = ["0.0.0.0/0"]   # allow to access thru EC2s ips
   description              = "Allow HTTP traffic only from ALB"
 }

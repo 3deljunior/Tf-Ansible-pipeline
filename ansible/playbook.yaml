@@ -1,8 +1,8 @@
 ---
-- name: Provision and configure AWS Web Servers
+- name: configure AWS Web Servers
   hosts: tag_Role_WebServer
   become: true
-  gather_facts: true
+  # gather_facts: true
   roles:
     - setup   
     - app

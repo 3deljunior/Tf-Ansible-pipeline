@@ -14,3 +14,6 @@ variable "public_subnet_ids" {
 variable "instance_ids" {
   type = list(string)
 }
+variable "instance_count" {
+  type    = number
+}
